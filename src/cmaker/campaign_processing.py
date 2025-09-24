@@ -1,9 +1,12 @@
 import yaml
+import os
 from datetime import datetime
 from pathlib import Path
+
 from PIL import Image
 
 from openai import OpenAI
+from dotenv import load_dotenv
 
 from .config import Config
 from .logger import CampaignLogger
@@ -12,6 +15,7 @@ from .image_processing import ImageProcessor
 from .prompt_generation import PromptGenerator
 from .campaign_loading import CampaignLoader
 
+load_dotenv()
 
 class CampaignProcessor:
     """Main workflow logic for processing campaigns."""
@@ -254,7 +258,7 @@ class CampaignProcessor:
             Translation:"""
 
         try:
-            client = OpenAI()
+            client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
             response = client.chat.completions.create(
                 model=self.config.GPT_MODEL,

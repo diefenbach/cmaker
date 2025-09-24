@@ -1,14 +1,18 @@
+import os
+
+from dotenv import load_dotenv
 from openai import OpenAI
 
 from .config import Config
 from .logger import CampaignLogger
 
+load_dotenv()
 
 class PromptGenerator:
     """Handles prompt generation and optimization."""
 
     def __init__(self, config: Config, logger: CampaignLogger):
-        self.client = OpenAI()
+        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.config = config
         self.logger = logger
 

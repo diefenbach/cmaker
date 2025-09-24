@@ -1,0 +1,13 @@
+region: Germany
+market: Berlin
+audience: Young urban professionals, eco-conscious
+message: "Stay hydrated. Stay sustainable."
+products: 
+  - EcoFresh Reusable Water Bottle 1l blue
+  - EcoFresh Reusable Water Bottle 1l green
+assets:
+  - bottle_1.png
+  - bottle_2.png
+languages:
+  - English
+  - German

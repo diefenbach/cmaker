@@ -9,27 +9,99 @@ This system automates the creation of marketing campaign assets by generating pr
 ## Installation
 
 ### Prerequisites
-- Python 3.12+
 - OpenAI API key
+- Python 3.12+
 - uv 
 
 ### Setup
 ```bash
-# Install uv (https://docs.astral.sh/uv/getting-started/installation/)
+# Install uv (or see https://docs.astral.sh/uv/getting-started/installation/)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Clone the repository
-git clone <repository-url> cmaker
+git clone https://github.com/diefenbach/cmaker.git
 cd cmaker
 
-# Install dependencies using uv (recommended)
+# Install dependencies using uv
 uv sync
 ```
 
-### Environment Setup
-Set your OpenAI API key:
+### Set your OpenAI API key:
 ```bash
-export OPENAI_API_KEY="your-api-key-here"
+
+cp .env_tmpl .env
+```
+
+Add your OPENAI_API_KEY to .env
+
+
+That's it! 
+
+## Basic Usage
+
+**Note:** You can get started immediately with the prepared example campaign ("campaign_1")
+
+```bash
+# Process all campaigns
+uv run cmaker
+
+# Or you can activate the virtualenv and run it directly
+source ./.venv/bin/activate
+cmaker
+```
+
+Watch the log messages in the terminal. When processing is complete, you will find the results in campaigns/campaign_1/results.
+
+## Creating a New Campaign
+
+To create a new campaign, follow these steps:
+
+1. **Copy the empty campaign template**:
+   ```bash
+   cp -r examples/campaign_empty campaigns/your_campaign_name
+   ```
+
+2. **Edit the brief.yaml file** in your campaign directory with your campaign details:
+   ```yaml
+   region: "Your target region"
+   market: "Your target market"
+   audience: "Your target audience"
+   message: "Your marketing message"
+   products:
+     - "Product name 1"
+     - "Product name 2"
+     - ...
+   assets:
+     - "existing_asset_1.png"  # Optional: existing product images
+     - "existing_asset_2.png"
+   languages:
+     - "English"
+     - "German"  # Add other languages as needed
+   ```
+
+3. **Add product assets** (optional):
+   - Place existing product images in the `assets/` folder
+   - For best results, use assets that are 1024x1024 PNG with alpha channel
+   - If no assets are provided, the system will generate them from product descriptions
+
+4. **Run the campaign**:
+   ```bash
+   uv run cmaker
+   ```
+
+The system will automatically process your new campaign and generate results in the `results/` folder within your campaign directory.
+
+### Campaign Status Tracking
+
+After a successful run, campaigns are marked as completed in `meta.yaml`:
+```yaml
+status: done
+```
+
+To re-run a completed campaign, remove or modify the status in `meta.yaml`:
+```yaml
+# Remove the status line or change it to:
+status: start
 ```
 
 ## General Approach
@@ -51,7 +123,7 @@ The system leverages multiple AI technologies:
 ### File structure
 ```
 cmaker /
-├── 📁 src/cmaker                         # Core application code
+├── 📁 src/cmaker                    # Core application code
 │   ├── main.py                      # Application entry point
 │   ├── campaign_processing.py       # Main campaign orchestrator
 │   ├── campaign_loading.py          # YAML campaign loader
@@ -69,6 +141,27 @@ cmaker /
 ├── 📄 pyproject.toml                # Project configuration
 └── 📄 README.md                     # This file
 ```
+
+## Output Structure
+
+Generated campaigns create organized folder structures:
+```
+results/
+├── 📁 product_name/                    # Generated campaign outputs
+    ├── 📁 base/                        # Base images without text
+    │   ├── 📁 1x1/                     # Square format
+    │   ├── 📁 16x9/                    # Landscape format
+    │   └── 📁 9x16/                    # Portrait format
+    ├── 📁 en/                          # English versions with text
+    │   ├── 📁 1x1/                     # Square format
+    │   ├── 📁 16x9/                    # Landscape format
+    │   └── 📁 9x16/                    # Portrait format
+    └── 📁 de/                          # German versions with text
+        ├── 📁 1x1/                     # Square format
+        ├── 📁 16x9/                    # Landscape format
+        └── 📁 9x16/                    # Portrait format
+```
+
 ## Architecture
 
 ### Core Modules
@@ -104,80 +197,13 @@ Centralized configuration management for API models, file paths, image processin
 #### `CampaignLogger` (logger.py)
 Structured logging system for tracking campaign processing progress and debugging.
 
-## Usage
-
-### Basic Usage
-```bash
-# Process all campaigns
-uv run cmaker
-
-# Or you can activate the virtualenv and run it directly
-source ./.venv/bin/activate
-cmaker
-```
-
-### Campaign Structure
-Create campaigns in the `campaigns/` directory with this structure:
-```
-campaigns/
-  campaign_name/
-    brief.yaml          # Campaign configuration
-    assets/             # Optional: existing product assets
-    results/            # Generated outputs
-```
-
-### Brief File Format
-```yaml
-region: "North America"
-market: "E-commerce"
-audience: "Eco-conscious consumers"
-message: "Sustainable living made simple"
-products:
-  - "EcoFresh Reusable Water Bottle 1L Green"
-  - "EcoFresh Reusable Water Bottle 1L Red"
-assets:
-  - "bottle_1.png"
-  - "bottle_2.png"
-languages:
-  - "English"
-  - "German"
-  - "French"
-```
-
-## Output Structure
-
-Generated campaigns create organized folder structures:
-```
-results/
-├── 📁 product_name/                    # Generated campaign outputs
-│   ├── 📁 base/                        # Base images without text
-│   │   ├── 📁 1x1/                     # Square format
-│   │   ├── 📁 16x9/                    # Landscape format
-│   │   └── 📁 9x16/                    # Portrait format
-│   ├── 📁 en/                          # English versions with text
-│   │   ├── 📁 1x1/                     # Square format
-│   │   ├── 📁 16x9/                    # Landscape format
-│   │   └── 📁 9x16/                    # Portrait format
-│   └── 📁 de/                          # German versions with text
-│       ├── 📁 1x1/                     # Square format
-│       ├── 📁 16x9/                    # Landscape format
-│       └── 📁 9x16/                    # Portrait format
-```
-
-## Configuration
-
-Key settings in `src/cmaker/config.py`:
-- **API Models**: DALL-E and GPT model selection
-- **Image Processing**: Canvas size, scaling, font settings
-- **File Paths**: Directory structure configuration
-- **Prompt Limits**: Maximum prompt lengths for different models
-
 ## Dependencies
 
 - `openai>=1.108.0` - OpenAI API client
 - `pillow>=11.3.0` - Image processing
 - `pyyaml>=6.0.2` - YAML configuration parsing
 - `requests>=2.32.5` - HTTP requests
+- `python-dotenv>=1.1.1` - Environment variable management
 
 ## Technical Notes
 
