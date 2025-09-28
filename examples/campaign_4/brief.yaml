@@ -1,0 +1,12 @@
+region: "Northamerica "
+market: "New York"
+audience: "Sophisticated adults, lifestyle & design enthusiasts"
+message: "Tradition meets elegance."
+products: 
+  - "Artisan Wooden Pipe"
+assets: 
+  - "pipe.png"
+languages:
+  - German
+  - French
+  - Italian

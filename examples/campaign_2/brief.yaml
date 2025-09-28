@@ -1,0 +1,11 @@
+region: Germany
+market: Berlin
+audience: Dog owners aged 25-45, urban lifestyle, value comfort and design
+message: Comfort your dog deserves.
+products: 
+  - CozyPaws Orthopedic Dog Bed
+assets:
+  - dog_bed.png
+languages:
+  - English
+  - German

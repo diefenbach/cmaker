@@ -1,0 +1,12 @@
+region: Europe
+market: Germany, France, Italy
+audience: Urban professionals, 25–40, tech-savvy, eco-conscious
+message: Ride the future. Silent. Powerful. Sustainable.
+products:
+  - VoltRide X1 Electric Motorcycle
+assets:
+  - motocycle.png
+languages:
+  - German
+  - French
+  - Italian
