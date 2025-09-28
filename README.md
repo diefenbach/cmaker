@@ -1,6 +1,6 @@
 # Campaign Maker (cmaker)
 
-An AI-powered marketing campaign image generation system that crea professional product photography and marketing materials using OpenAI's DALL-E and GPT models.
+An AI-powered marketing campaign image generation system that creates professional product photography and marketing materials using OpenAI's DALL-E and GPT models.
 
 ## Overview
 
