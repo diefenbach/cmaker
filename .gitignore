@@ -30,3 +30,6 @@ htmlcov/
 .pre-commit-config.yaml
 .secrets.baseline
 .python-version
+
+# Project files
+docs/Video.mov
